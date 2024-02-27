@@ -1,15 +1,17 @@
 <?php
 
 // database connection
+// Database credentials
 $servername = "localhost";
 $username = "root";
 $password = "";
-$database = "myshop";   ///
+$database = "myshop";
 
 // Create connection
 $connection = new mysqli($servername, $username, $password, $database);
 
-$name = "";   ///
+$id = "";
+$name = "";
 $email = "";
 $phone = "";
 $address = "";
@@ -18,35 +20,37 @@ $errorMessage = "";
 $successMessage = "";
 
 if ( $_SERVER['REQUEST_METHOD'] == 'POST'){      // POST - data transmit
-	$name = $_POST["name"];      ///
+	$id = $_POST["id"];
+    $name = $_POST["name"];
 	$email = $_POST["email"];
 	$phone = $_POST["phone"];
 	$address = $_POST["address"];
 
 	do{
-       if (empty($name) || empty($email) || empty($phone) || empty($address)){   ///
+       if (empty($id) || empty($name) || empty($email) || empty($phone) || empty($address)){
 		  $errorMessage = "All the fields are required";
 		  break;
 	   }
 
 	   // add new client to database
-       $sql = "INSERT INTO clients (name, email, phone, address)" .   ///
-              "VALUES ('$name', '$email', '$phone', '$address')";    ///
+       $sql = "INSERT INTO clients (id, name, email, phone, address)" .
+              "VALUES ('$id', '$name', '$email', '$phone', '$address')";
        $result = $connection->query($sql);
 
 	   if (!$result){
 		 $errorMessage = "Invalid query: " . $connection->error;
 		 break;
 	   }
-
-	   $name = "";    ///
+       
+	   $id = "";
+	   $name = "";
 	   $email = "";
 	   $phone = "";
 	   $address = "";
 
 	   $successMessage = "Client added correctly";
 
-	   header("location: /myshop/index.php");    ///
+	   header("location: /myshop/index.php");
 	   exit;
 	   
 	} while(false);
@@ -69,7 +73,7 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST'){      // POST - data transmit
     <div class="container my-5">
         <h2>New Client</h2>
 
-        <?php  
+        <?php
 		 if (!empty($errorMessage)){
 			echo "
 			<div class='alert alert-warning alert-dismissable fade show' role='alert'>
@@ -82,9 +86,16 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST'){      // POST - data transmit
 
         <form method="post">
             <div class="row mb-3">
-                <label for="" class="col-sm-3 col-form-label">Name</label>    
+                <label for="" class="col-sm-3 col-form-label">id</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="name" value="<?php echo $name; ?>">  
+                    <input type="text" class="form-control" name="id" value="<?php echo $id; ?>">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label for="" class="col-sm-3 col-form-label">Name</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" name="name" value="<?php echo $name; ?>">
                 </div>
             </div>
             <div class="row mb-3">
