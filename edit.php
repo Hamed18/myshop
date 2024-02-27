@@ -57,9 +57,9 @@ else{
 			break;
 	    } 
 
-        $sql = "UPDATE clients" . 
-		"SET name = '$name', email = '$email', phone = '$phone', address='$address' " .
-		"WHERE id=$id";
+        $sql = "UPDATE clients " . 
+		    "SET name = '$name', email = '$email', phone = '$phone', address='$address' " .
+		    "WHERE id=$id";
 
 		$result = $connection->query($sql);
 
@@ -108,11 +108,11 @@ else{
 		 ?>
 
         <form method="post">
-			<input type = "hidden" name="id" value="<?php echo $id; ?>">
+            <input type="hidden" name="id" value="<?php echo $id; ?>">
             <div class="row mb-3">
-                <label for="" class="col-sm-3 col-form-label">Name</label>    
+                <label for="" class="col-sm-3 col-form-label">Name</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="name" value="<?php echo $name; ?>">  
+                    <input type="text" class="form-control" name="name" value="<?php echo $name; ?>">
                 </div>
             </div>
             <div class="row mb-3">
