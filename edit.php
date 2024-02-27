@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 // database connection
 $servername = "localhost";
@@ -9,6 +9,8 @@ $database = "myshop";   ///
 // Create connection
 $connection = new mysqli($servername, $username, $password, $database);
 
+
+$id = "";
 $name = "";   ///
 $email = "";
 $phone = "";
@@ -17,41 +19,66 @@ $address = "";
 $errorMessage = "";
 $successMessage = "";
 
-if ( $_SERVER['REQUEST_METHOD'] == 'POST'){      // POST - data transmit
+if ( $_SERVER['REQUEST_METHOD'] == 'GET'){    // why GET used not POST ?
+	// Get Method: show the data of the client
+	if (!isset($_GET['id'])){
+		header("location: /myshop/index.php");    ///
+		exit; 
+	}
+	$id = $_GET["id"];
+
+	// read the row of the selected client from database table
+	$sql = "SELECT * FROM clients WHERE id=$id";   ///
+	$result = $connection->query($sql);
+	$row = $result->fetch_assoc();   ///
+
+	if (!$row){
+		header("location: /myshop/index.php");
+		exit;
+	}
+	
+    $id = $row["id"];   
+	$name = $row["name"];   ///
+    $email = $row["email"];
+    $phone = $row["phone"];
+    $address = $row["address"];
+}
+else{
+	// POST method: update the data of the client
+	$id = $_POST["id"];      ///
 	$name = $_POST["name"];      ///
 	$email = $_POST["email"];
 	$phone = $_POST["phone"];
 	$address = $_POST["address"];
 
 	do{
-       if (empty($name) || empty($email) || empty($phone) || empty($address)){   ///
-		  $errorMessage = "All the fields are required";
+		if (empty($id) || empty($name) || empty($email) || empty($phone) || empty($address)){   ///
+			$errorMessage = "All the fields are required";
+			break;
+	    } 
+
+        $sql = "UPDATE clients" . 
+		"SET name = '$name', email = '$email', phone = '$phone', address='$address' " .
+		"WHERE id=$id";
+
+		$result = $connection->query($sql);
+
+		if (!$result){
+		  $errorMessage = "Invalid query: " . $connection->error;
 		  break;
-	   }
+		}
+ 
+		$successMessage = "Client updated correctly";
 
-	   // add new client to database
-       $sql = "INSERT INTO clients (name, email, phone, address)" .   ///
-              "VALUES ('$name', '$email', '$phone', '$address')";    ///
-       $result = $connection->query($sql);
+		header("location: /myshop/index.php");    ///
+		exit; 
 
-	   if (!$result){
-		 $errorMessage = "Invalid query: " . $connection->error;
-		 break;
-	   }
+    } while(false);
 
-	   $name = "";    ///
-	   $email = "";
-	   $phone = "";
-	   $address = "";
-
-	   $successMessage = "Client added correctly";
-
-	   header("location: /myshop/index.php");    ///
-	   exit;
-	   
-	} while(false);
 }
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -81,6 +108,7 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST'){      // POST - data transmit
 		 ?>
 
         <form method="post">
+			<input type = "hidden" name="id" value="<?php echo $id; ?>">
             <div class="row mb-3">
                 <label for="" class="col-sm-3 col-form-label">Name</label>    
                 <div class="col-sm-6">
