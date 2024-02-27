@@ -1,4 +1,16 @@
 <?php
+
+// database connection
+// Database credentials
+$servername = "localhost";
+$username = "root";
+$password = "";
+$database = "myshop";
+
+// Create connection
+$connection = new mysqli($servername, $username, $password, $database);
+
+
 $name = "";
 $email = "";
 $phone = "";
@@ -20,12 +32,24 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST'){      // POST - data transmit
 	   }
 
 	   // add new client to database
+       $sql = "INSERT INTO clients (name, email, phone, address)"
+              "VALUES ('$name', '$email', '$phone', '$address')";
+       $result=$connection->query($sql);
+
+	   if (!result){
+		 $errorMessage = "Invalid query: " . $connection->error;
+		 break;
+	   }
+
 	   $name = "";
 	   $email = "";
 	   $phone = "";
 	   $address = "";
 
 	   $successMessage = "Client added correctly";
+
+	   header("location: /myshop/index.php");
+	   exit;
 	   
 	} while(false);
 }
