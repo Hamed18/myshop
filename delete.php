@@ -10,7 +10,7 @@ if ( isset($_GET["id"]) ) {   // check it receive the id or not
 	// create connection
 	$connection = new mysqli($servername, $username, $password, $database);
 
-	$sql = "DELETE FROM clients WHERE id="$id";
+	$sql = "DELETE FROM clients WHERE id=$id";
 	$connection->query($sql);
 
 }
